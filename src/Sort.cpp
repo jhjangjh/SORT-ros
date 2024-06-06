@@ -39,6 +39,14 @@ std::vector<SortRect> Sort::update(std::vector<SortRect> detections) {
         predictions.push_back(rect);
     }
 
+//--------------------------------------------------------
+  for (int i = 0; i < trackers.size(); i++) {
+    std::cout << "predictions vec " << i << " CenterX : " << predictions[i].centerX << std::endl;
+    std::cout << "predictions vec " << i << " CenterY : " << predictions[i].centerY << std::endl;
+    std::cout << "predictions vec " << i << " width : " << predictions[i].width << std::endl;
+    std::cout << "predictions vec " << i << " height : " << predictions[i].height << std::endl;
+  }
+//--------------------------------------------------------
 
 
     vector<vector<double>> iouMatrix;
@@ -48,8 +56,14 @@ std::vector<SortRect> Sort::update(std::vector<SortRect> detections) {
         for(int j=0; j<detections.size(); j++)
             iouMatrix[i][j] = 1 - iou(predictions[i], detections[j]);
 
-
-
+//----------------------------------------------------
+    for(int i=0; i<predictions.size(); i++){
+        for(int j=0; j<detections.size(); j++){
+            std::cout << iouMatrix[i][j] << " ";
+        }    
+        std::cout << std::endl;
+    }
+//--------------------------------------------------------
     vector<int> assignment;
 
     HungAlgo.Solve(iouMatrix, assignment);

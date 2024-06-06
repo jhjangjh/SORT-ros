@@ -13,13 +13,16 @@ private:
 
     static SortRos* instance;
 
-    SortRos(void) {};
+    SortRos(void) {
+        std::cout << "생성자 호출" << std::endl;
+    };
     SortRos(const SortRos& other);
     ~SortRos() {};
 
 public:
 
     static SortRos* GetInstance() {
+        std::cout << "GetInstance 호출" << std::endl;
         if(instance == NULL) instance = new SortRos();
         return instance;
     }

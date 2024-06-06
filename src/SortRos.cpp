@@ -12,6 +12,9 @@ Sort *SortRos::s;
 
 void SortRos::setup(void) {
 
+    std::cout << "setup 함수 호출" << std::endl;
+
+
     double maxAge = 2;
     double minHits = 3;
     double iouThreshold = 0.3;
@@ -22,13 +25,17 @@ void SortRos::setup(void) {
 
     SortRos::s = new Sort(maxAge, minHits, iouThreshold);
 
-	SortRos::sub = nh.subscribe<visualization_msgs::MarkerArray> ("/markers_detected", 1, SortRos::rectArrayCallback);
+	// SortRos::sub = nh.subscribe<visualization_msgs::MarkerArray> ("/markers_detected", 1, SortRos::rectArrayCallback);
+	SortRos::sub = nh.subscribe<visualization_msgs::MarkerArray> ("dynamic_boxes", 1, SortRos::rectArrayCallback);
     SortRos::pub = nh.advertise<visualization_msgs::MarkerArray> ("/markers_tracked", 1);
 
 }
 
 
 void SortRos::rectArrayCallback (const visualization_msgs::MarkerArray::ConstPtr& markerArray) {
+
+    // std::cout << "콜백함수 호출" << std::endl;
+
 
     std::string frame_id;
     std::vector<SortRect> rects;
@@ -65,8 +72,8 @@ void SortRos::rectArrayCallback (const visualization_msgs::MarkerArray::ConstPtr
         marker.ns = "bounding_box";
         marker.id = rect.id;
         marker.action = visualization_msgs::Marker::ADD;
-        marker.type = visualization_msgs::Marker::CUBE;
-        
+        marker.type = visualization_msgs::Marker::TEXT_VIEW_FACING;
+        marker.text = std::to_string(rect.id);
         marker.pose.position.x = rect.centerX;
         marker.pose.position.y = rect.centerY;
         marker.pose.position.z = 1.0;
@@ -78,7 +85,7 @@ void SortRos::rectArrayCallback (const visualization_msgs::MarkerArray::ConstPtr
         marker.scale.x = rect.width;
         marker.scale.y = rect.height;
         marker.scale.z = 1.0;
-        marker.color.a = 0.3;
+        marker.color.a = 1.0;
         marker.color.r = 1.0;
         marker.color.g = 1.0;
         marker.color.b = 1.0;
